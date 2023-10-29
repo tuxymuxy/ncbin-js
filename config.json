@@ -1,0 +1,9 @@
+{
+	"brand": "Tuxy",
+	"webPort": 3000,
+	"ncPort": 6881,
+	"dataDir": "data",
+	"idLength": 6,
+	"url": "127.0.0.1",
+	"storageSize": 256
+}
