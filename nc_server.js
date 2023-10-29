@@ -32,8 +32,7 @@ Usage:
 const server = net.createServer((socket) => {
 	socket.on("data", (data) => {
 		const receivedData = data.toString();
-		console.log(`Received: ${receivedData}`);
-		let id = randomstring.generate(config.idLength); // Change the length as needed
+		let id = randomstring.generate(config.idLength);
 
 		fs.writeFile(
 			path.join(config.dataDir, id),
@@ -44,14 +43,18 @@ const server = net.createServer((socket) => {
 		socket.write(`http://${config.url}:${config.webPort}/${id}`);
 	});
 });
-server.listen(config.ncPort);
-app.listen(config.webPort);
+server.listen(config.ncPort, () => {
+	console.log(`Netcat server listening on port ${config.ncPort}!`);
+});
+app.listen(config.webPort, () => {
+	console.log(`Webserver listening on port ${config.webPort}!`);
+});
 function cleanupStorage() {
 	const files = fs.readdirSync(config.dataDir);
 	files.sort(
 		(a, b) =>
-			fs.statSync(path.join(config.dataDir, a)).ctime -
-			fs.statSync(path.join(config.dataDir, b)).ctime
+			fs.statSync(path.join(config.dataDir, a)).mtime -
+			fs.statSync(path.join(config.dataDir, b)).mtime
 	);
 
 	let folderSize = 0;
@@ -63,12 +66,12 @@ function cleanupStorage() {
 		if (stats.isFile()) {
 			if (folderSize + stats.size > config.storageSize) {
 				fs.unlinkSync(filePath);
-				console.log(`Deleted ${file} to reduce folder size.`);
+				console.log(`Deleted ${file}!`);
 			} else {
 				folderSize += stats.size;
 			}
 		}
 	}
 }
-setInterval(cleanupStorage, 60 * 60 * 1000); // Check every hour
+setInterval(cleanupStorage, 60 * 60 * 1000);
 cleanupStorage();
