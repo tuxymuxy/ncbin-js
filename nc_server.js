@@ -22,13 +22,11 @@ app.get("/:postID", (req, res) => {
 });
 app.get("/", (req, res) => {
 	res.send(
-		`<body style="background-color:#1a1a1a;color:#fff;">
-		<pre>${config.brand}'s Paste Server\n
+		`${config.brand}'s Paste Server
 Usage:
    ~$ echo textgoeshere | nc ${config.url} ${config.ncPort}"
        http://${req.hostname}:${config.webPort}/abcdef\n   ~$ cat * | grep ncore | nc ${config.url} ${config.ncPort}"
-       http://${req.hostname}:${config.webPort}/ghijkl
-	</pre></body>`
+       http://${req.hostname}:${config.webPort}/ghijkl`
 	);
 });
 const server = net.createServer((socket) => {
@@ -46,12 +44,8 @@ const server = net.createServer((socket) => {
 		socket.write(`http://${config.url}:${config.webPort}/${id}`);
 	});
 });
-server.listen(config.ncPort, () => {
-	console.log(`Server listening on port ${config.ncPort}`);
-});
-app.listen(config.webPort, () => {
-	console.log(`Express server is running on port ${config.webPort}`);
-});
+server.listen(config.ncPort);
+app.listen(config.webPort);
 function cleanupStorage() {
 	const files = fs.readdirSync(config.dataDir);
 	files.sort(

@@ -1,6 +1,6 @@
 {
 	"brand": "Tuxy",
-	"webPort": 80,
+	"webPort": 3000,
 	"ncPort": 6881,
 	"dataDir": "data",
 	"idLength": 6,
